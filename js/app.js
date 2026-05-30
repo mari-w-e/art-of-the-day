@@ -1,208 +1,122 @@
-const wmt = (path, filename) =>
-  `https://upload.wikimedia.org/wikipedia/commons/thumb/${path}/${filename}/900px-${filename}`;
+const App = {
+  
+  getTodayPainting() {
+    const today = new Date().toISOString().split('T')[0];
+    const seed = today.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    return paintings[seed % paintings.length];
+  },
 
-const wm = (path, filename) =>
-  `https://upload.wikimedia.org/wikipedia/commons/${path}/${filename}`;
+  getPaintingById(id) {
+    return paintings.find(p => p.id === id) || null;
+  },
 
-const paintings = [
-  {
-    id: 1,
-    title: "Сенокос",
-    artist: "Алексей Венецианов",
-    year: 1827,
-    topic: "Быт и природа",
-    description: "Одна из ключевых работ художника, посвящённых крестьянской теме. На картине изображена сцена летнего труда в поле на фоне типичного русского пейзажа.",
-    story: "Венецианов написал эту картину в своём имении Сафонково, где жил среди крестьян и наблюдал их быт. Художник стремился показать красоту и достоинство простого труда.",
-    imageUrl: wmt("c/c7", "Aleksey_Venetsianov_-_Haymaking_-_Google_Art_Project.jpg")
+  
+  recordView(userId, paintingId) {
+    Storage.addToHistory(userId, paintingId);
   },
-  {
-    id: 2,
-    title: "На жатве. Лето",
-    artist: "Алексей Венецианов",
-    year: 1820,
-    topic: "Быт и природа",
-    description: "Картина изображает крестьянку, кормящую ребёнка прямо в поле во время уборки урожая. На заднем плане — бескрайнее поле и работающие крестьяне.",
-    story: "Венецианов одним из первых в русской живописи обратился к изображению крестьянского труда без идеализации, показывая реальную жизнь простых людей.",
-    imageUrl: wmt("3/31", "Alexei_Venetsianov_-_On_the_Harvest._Summer._-_Google_Art_Project.jpg")
+
+  getHistory(userId) {
+    return Storage.getHistory(userId)
+      .map(h => ({ ...App.getPaintingById(h.paintingId), viewedAt: h.viewedAt }))
+      .filter(p => p.id !== undefined);
   },
-  {
-    id: 3,
-    title: "Явление Христа народу",
-    artist: "Александр Иванов",
-    year: 1857,
-    topic: "Религиозная живопись",
-    description: "Монументальное полотно, над которым художник работал более двадцати лет. Изображает момент, когда Иоанн Креститель указывает людям на приближающегося Христа.",
-    story: "Иванов начал работу над картиной в Риме в 1837 году. Это был главный труд его жизни — художник считал своей миссией создать произведение, которое обратит людей к духовному.",
-    imageUrl: wmt("7/7b", "Ivanov._Appearance_of_Christ_to_the_People.jpg")
+
+  
+  toggleFavorite(userId, paintingId) {
+    return Storage.toggleFavorite(userId, paintingId);
   },
-  {
-    id: 4,
-    title: "Грачи прилетели",
-    artist: "Алексей Саврасов",
-    year: 1871,
-    topic: "Пейзаж",
-    description: "Одна из самых известных картин русской живописи, ставшая символом прихода весны.",
-    story: "Картина написана в марте 1871 года в селе Молвитино. Саврасов сумел передать особое состояние природы в момент перехода от зимы к весне.",
-    imageUrl: wmt("b/bd", "Savrasov_-_The_Rooks_Have_Come_Back_-_Google_Art_Project.jpg")
+
+  isFavorite(userId, paintingId) {
+    return Storage.isFavorite(userId, paintingId);
   },
-  {
-    id: 5,
-    title: "Утро в сосновом лесу",
-    artist: "Иван Шишкин",
-    year: 1889,
-    topic: "Пейзаж",
-    description: "Знаменитая картина с медведями в лесу, которую большинство людей знают с детства.",
-    story: "Фигуры медведей написаны Константином Савицким — соавтором картины. Однако Третьяков, купивший полотно, стёр подпись Савицкого, оставив только имя Шишкина.",
-    imageUrl: wmt("2/27", "Ivan_Shishkin_-_Morning_in_a_Pine_Forest.jpg")
+
+  getFavorites(userId) {
+    return Storage.getFavorites(userId)
+      .map(id => App.getPaintingById(id))
+      .filter(Boolean);
   },
-  {
-    id: 6,
-    title: "Над вечным покоем",
-    artist: "Исаак Левитан",
-    year: 1894,
-    topic: "Пейзаж",
-    description: "Одно из самых философских произведений Левитана — пейзаж с видом на реку и старую церковь на холме.",
-    story: "Картина написана на озере Удомля. Левитан называл её своей самой заветной работой — в ней он выразил размышления о вечности, смерти и месте человека в мироздании.",
-    imageUrl: wmt("0/0c", "Levitan_above_eternal_peace.jpg")
+
+
+  updateNav() {
+    const user = Auth.getCurrentUser();
+    const navAuth = document.getElementById('nav-auth');
+    const navUser = document.getElementById('nav-user');
+    if (!navAuth || !navUser) return;
+
+    if (user) {
+      navAuth.style.display = 'none';
+      navUser.style.display = 'flex';
+      const nameEl = document.getElementById('nav-username');
+      if (nameEl) nameEl.textContent = user.username;
+    } else {
+      navAuth.style.display = 'flex';
+      navUser.style.display = 'none';
+    }
   },
-  {
-    id: 7,
-    title: "Богатыри",
-    artist: "Виктор Васнецов",
-    year: 1898,
-    topic: "Исторический жанр",
-    description: "Монументальное полотно с тремя главными богатырями русского эпоса — Добрыней Никитичем, Ильёй Муромцем и Алёшей Поповичем.",
-    story: "Васнецов работал над картиной почти тридцать лет. Первый эскиз был сделан в 1871 году, а законченное полотно передано в Третьяковскую галерею в 1898-м.",
-    imageUrl: wmt("4/4f", "Viktor_Vasnetsov_-_Bogatyrs_-_Google_Art_Project.jpg")
+
+  
+
+  renderPaintingCard(painting, containerId, options = {}) {
+    const container = document.getElementById(containerId);
+    if (!container || !painting) return;
+
+    const user = Auth.getCurrentUser();
+    const fav = user ? App.isFavorite(user.id, painting.id) : false;
+    const favBtn = user
+      ? `<button class="fav-btn ${fav ? 'active' : ''}" onclick="App.handleFavToggle(${painting.id}, this)">
+           ${fav ? '★ В избранном' : '☆ В избранное'}
+         </button>`
+      : '';
+
+    container.innerHTML = `
+      <img src="${painting.imageUrl}" alt="${painting.title}">
+      <div class="painting-info">
+        <div class="painting-title">${painting.title}</div>
+        <div class="painting-artist">${painting.artist}, ${painting.year}</div>
+        <span class="painting-topic">${painting.topic}</span>
+        <div class="painting-description">${painting.description}</div>
+        <div class="painting-story">${painting.story}</div>
+        ${favBtn}
+        ${options.guestNotice && !user
+          ? '<div class="guest-notice">Войдите в аккаунт, чтобы сохранять историю и добавлять в избранное</div>'
+          : ''}
+      </div>
+    `;
   },
-  {
-    id: 8,
-    title: "Бурлаки на Волге",
-    artist: "Илья Репин",
-    year: 1873,
-    topic: "Быт и природа",
-    description: "Картина изображает группу бурлаков, тянущих баржу вдоль берега Волги под летним солнцем.",
-    story: "Репин работал над полотном три года. Художник лично путешествовал по Волге, делая зарисовки реальных бурлаков и изучая их тяжёлый труд.",
-    imageUrl: wmt("7/7a", "Ilya_Repin_-_Barge_Haulers_on_the_Volga_-_Google_Art_Project.jpg")
+
+  handleFavToggle(paintingId, btn) {
+    const user = Auth.getCurrentUser();
+    if (!user) return;
+    const added = App.toggleFavorite(user.id, paintingId);
+    btn.textContent = added ? '★ В избранном' : '☆ В избранное';
+    btn.classList.toggle('active', added);
   },
-  {
-    id: 9,
-    title: "Иван Грозный и сын его Иван",
-    artist: "Илья Репин",
-    year: 1885,
-    topic: "Исторический жанр",
-    description: "Картина изображает драматическую сцену: царь Иван IV держит на руках смертельно раненого им сына.",
-    story: "Картина произвела такое потрясающее впечатление на современников, что один из посетителей галереи порезал её ножом. Репину потребовалось несколько недель для реставрации.",
-    imageUrl: wmt("2/28", "Repin_Ivan_Terrible.jpg")
-  },
-  {
-    id: 10,
-    title: "Девочка с персиками",
-    artist: "Валентин Серов",
-    year: 1887,
-    topic: "Портрет",
-    description: "Портрет двенадцатилетней Веры Мамонтовой, написанный в солнечной комнате усадьбы Абрамцево.",
-    story: "Серов работал над картиной почти три месяца, добиваясь ощущения мимолётного летнего момента. Сам художник говорил, что хотел написать «свежесть».",
-    imageUrl: wmt("9/93", "Valentin_Serov_-_Girl_with_Peaches_-_1887.jpg")
-  },
-  {
-    id: 11,
-    title: "Март",
-    artist: "Исаак Левитан",
-    year: 1895,
-    topic: "Пейзаж",
-    description: "Яркий, радостный пейзаж, изображающий первые признаки весны: осевший снег, синее небо и лошадь у крыльца.",
-    story: "Картина написана в усадьбе Горка Тверской губернии. Левитан завершил её в несколько дней, работая прямо на открытом воздухе.",
-    imageUrl: wmt("4/4f", "Levitan_march.jpg")
-  },
-  {
-    id: 12,
-    title: "Всадница",
-    artist: "Карл Брюллов",
-    year: 1832,
-    topic: "Портрет",
-    description: "Торжественный парадный портрет двух воспитанниц графини Самойловой: Джованнины и Амалиции Пачини.",
-    story: "Картина стала сенсацией на выставке в Милане в 1832 году. Критики назвали её «большой картиной» — высшей похвалой того времени.",
-    imageUrl: wmt("c/ce", "Karl_Briullov_-_The_Horsewoman_-_Google_Art_Project.jpg")
-  },
-  {
-    id: 13,
-    title: "Последний день Помпеи",
-    artist: "Карл Брюллов",
-    year: 1833,
-    topic: "Исторический жанр",
-    description: "Грандиозное полотно, изображающее гибель Помпеи при извержении Везувия в 79 году н.э.",
-    story: "Брюллов посетил раскопки Помпеи в 1828 году и был потрясён увиденным. Работа над картиной заняла шесть лет. При показе в Петербурге публика была в восторге.",
-    imageUrl: wmt("6/64", "Karl_Briullov_-_The_Last_Day_of_Pompeii_-_Google_Art_Project.jpg")
-  },
-  {
-    id: 14,
-    title: "Рожь",
-    artist: "Иван Шишкин",
-    year: 1878,
-    topic: "Пейзаж",
-    description: "Широкое ржаное поле под голубым небом с одинокими соснами на горизонте — один из символов русского лета.",
-    story: "Картина написана по этюдам, сделанным в Елабуге. На подрамнике Шишкин оставил надпись: «Раздолье, простор, угодье. Рожь».",
-    imageUrl: wmt("2/23", "Shishkin_rye.jpg")
-  },
-  {
-    id: 15,
-    title: "Тройка",
-    artist: "Василий Перов",
-    year: 1866,
-    topic: "Быт и природа",
-    description: "Трое измождённых детей тянут по снегу тяжёлую бочку с водой. Картина стала символом тяжёлой доли крестьянских детей.",
-    story: "Перов долго не мог найти подходящего мальчика для центральной фигуры. Наконец он встретил крестьянку с сыном Васей. Позднее мать разыскала художника: мальчик умер, и она просила продать ей портрет.",
-    imageUrl: wmt("8/8b", "Perov_-_Troika.jpg")
-  },
-  {
-    id: 16,
-    title: "Золотая осень",
-    artist: "Исаак Левитан",
-    year: 1895,
-    topic: "Пейзаж",
-    description: "Солнечный осенний пейзаж с берёзовой рощей и голубой рекой, один из самых светлых и радостных пейзажей Левитана.",
-    story: "Картина написана в окрестностях Владимира. В «Золотой осени» Левитан запечатлел торжество и великолепие природы.",
-    imageUrl: wmt("5/57", "Levitan_Zolotaya_Osen.jpg")
-  },
-  {
-    id: 17,
-    title: "Незнакомка",
-    artist: "Иван Крамской",
-    year: 1883,
-    topic: "Портрет",
-    description: "Молодая женщина в открытом экипаже на фоне зимнего Петербурга. Её личность до сих пор остаётся загадкой.",
-    story: "Крамской так и не раскрыл, кто изображён на картине. Картина стала воплощением таинственной красоты.",
-    imageUrl: wmt("a/a7", "Ivan_Kramskoy_-_Unknown_Woman_-_Google_Art_Project.jpg")
-  },
-  {
-    id: 18,
-    title: "Алёнушка",
-    artist: "Виктор Васнецов",
-    year: 1881,
-    topic: "Сказочный жанр",
-    description: "Девочка-сирота, сидящая у лесного пруда в окружении тёмного леса. Картина навеяна русской народной сказкой.",
-    story: "Васнецов написал картину под впечатлением от встречи с деревенской девочкой, в глазах которой художник увидел «глубокую тоску одиночества и сугубо русскую печаль».",
-    imageUrl: wmt("3/33", "Vasnetsov_Alenushka.jpg")
-  },
-  {
-    id: 19,
-    title: "Охотники на привале",
-    artist: "Василий Перов",
-    year: 1871,
-    topic: "Быт и природа",
-    description: "Трое охотников на привале: один увлечённо рассказывает небылицы, второй скептически усмехается, третий простодушно верит.",
-    story: "Картина была воспринята как жанровая сцена с юмором. Писатель Достоевский называл её одним из лучших произведений Перова.",
-    imageUrl: wmt("f/f1", "Hunters_at_Rest_by_Perov.jpg")
-  },
-  {
-    id: 20,
-    title: "Корабельная роща",
-    artist: "Иван Шишкин",
-    year: 1898,
-    topic: "Пейзаж",
-    description: "Величественный сосновый лес с просматривающимся ручьём. Одна из последних и самых зрелых работ художника.",
-    story: "Картина написана по этюдам с натуры близ Елабуги. Шишкин сделал надпись на холсте: «Афанасовская корабельная роща близ Елабуги».",
-    imageUrl: wmt("5/53", "Shishkin_ship_grove.jpg")
+
+  
+
+  renderGallery(containerId, items, emptyText) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+
+    if (items.length === 0) {
+      el.innerHTML = `<div class="empty-state">${emptyText}</div>`;
+      return;
+    }
+
+    const cards = items.map(p => `
+      <a href="painting.html?id=${p.id}" class="gallery-item">
+        <img src="${p.imageUrl}" alt="${p.title}">
+        <div class="gallery-item-info">
+          <div class="gallery-item-title">${p.title}</div>
+          <div class="gallery-item-artist">${p.artist}, ${p.year}</div>
+        </div>
+      </a>
+    `).join('');
+
+    el.innerHTML = `<div class="gallery">${cards}</div>`;
   }
-];
+};
+
+
+function updateNav() { App.updateNav(); }
+function logout() { Auth.logout(); }
