@@ -47,29 +47,9 @@
     if (!user) {
       window.location.href = 'login.html';
     } else {
-      document.getElementById('subtitle').textContent =
-        `Привет, ${user.username}!`;
-
-      renderGallery('gallery-history', App.getHistory(user.id), 'Вы ещё не просмотрели ни одной картины.');
-      renderGallery('gallery-favorites', App.getFavorites(user.id), 'В избранном пока пусто.');
-    }
-
-    function renderGallery(containerId, items, emptyText) {
-      const el = document.getElementById(containerId);
-      if (items.length === 0) {
-        el.innerHTML = `<div class="empty-state">${emptyText}</div>`;
-        return;
-      }
-      const cards = items.map(p => `
-        <a href="painting.html?id=${p.id}" class="gallery-item">
-          <img src="${p.imageUrl}" alt="${p.title}">
-          <div class="gallery-item-info">
-            <div class="gallery-item-title">${p.title}</div>
-            <div class="gallery-item-artist">${p.artist}, ${p.year}</div>
-          </div>
-        </a>
-      `).join('');
-      el.innerHTML = `<div class="gallery">${cards}</div>`;
+      document.getElementById('subtitle').textContent = `Привет, ${user.username}!`;
+      App.renderGallery('gallery-history', App.getHistory(user.id), 'Вы ещё не просмотрели ни одной картины.');
+      App.renderGallery('gallery-favorites', App.getFavorites(user.id), 'В избранном пока пусто.');
     }
 
     function showTab(name) {
