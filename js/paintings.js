@@ -1,3 +1,6 @@
+const wm = (filename) =>
+  `https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/${encodeURIComponent(filename)}&width=900`;
+ 
 const paintings = [
   {
     id: 1,
@@ -7,7 +10,7 @@ const paintings = [
     topic: "Быт и природа",
     description: "Одна из ключевых работ художника, посвящённых крестьянской теме. На картине изображена сцена летнего труда в поле на фоне типичного русского пейзажа.",
     story: "Венецианов написал эту картину в своём имении Сафонково, где жил среди крестьян и наблюдал их быт. Художник стремился показать красоту и достоинство простого труда.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Aleksey_Venetsianov_-_Haymaking_-_Google_Art_Project.jpg"
+    imageUrl: wm("Aleksey Venetsianov - Haymaking - Google Art Project.jpg")
   },
   {
     id: 2,
@@ -17,7 +20,7 @@ const paintings = [
     topic: "Быт и природа",
     description: "Картина изображает крестьянку, кормящую ребёнка прямо в поле во время уборки урожая. На заднем плане — бескрайнее поле и работающие крестьяне.",
     story: "Венецианов одним из первых в русской живописи обратился к изображению крестьянского труда без идеализации, показывая реальную жизнь простых людей.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Alexei_Venetsianov_-_On_the_Harvest._Summer._-_Google_Art_Project.jpg"
+    imageUrl: wm("Alexei Venetsianov - On the Harvest. Summer. - Google Art Project.jpg")
   },
   {
     id: 3,
@@ -27,7 +30,7 @@ const paintings = [
     topic: "Религиозная живопись",
     description: "Монументальное полотно, над которым художник работал более двадцати лет. Изображает момент, когда Иоанн Креститель указывает людям на приближающегося Христа.",
     story: "Иванов начал работу над картиной в Риме в 1837 году. Это был главный труд его жизни — художник считал своей миссией создать произведение, которое обратит людей к духовному.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Ivanov._Appearance_of_Christ_to_the_People.jpg"
+    imageUrl: wm("Ivanov. Appearance of Christ to the People.jpg")
   },
   {
     id: 4,
@@ -37,7 +40,7 @@ const paintings = [
     topic: "Пейзаж",
     description: "Одна из самых известных картин русской живописи, ставшая символом прихода весны.",
     story: "Картина написана в марте 1871 года в селе Молвитино. Саврасов сумел передать особое состояние природы в момент перехода от зимы к весне.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Savrasov_-_The_Rooks_Have_Come_Back_-_Google_Art_Project.jpg"
+    imageUrl: wm("Savrasov - The Rooks Have Come Back - Google Art Project.jpg")
   },
   {
     id: 5,
@@ -47,7 +50,7 @@ const paintings = [
     topic: "Пейзаж",
     description: "Знаменитая картина с медведями в лесу, которую большинство людей знают с детства.",
     story: "Фигуры медведей написаны Константином Савицким — соавтором картины. Однако Третьяков, купивший полотно, стёр подпись Савицкого, оставив только имя Шишкина.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Ivan_Shishkin_-_Morning_in_a_Pine_Forest.jpg"
+    imageUrl: wm("Ivan Shishkin - Morning in a Pine Forest.jpg")
   },
   {
     id: 6,
@@ -57,7 +60,7 @@ const paintings = [
     topic: "Пейзаж",
     description: "Одно из самых философских произведений Левитана — пейзаж с видом на реку и старую церковь на холме.",
     story: "Картина написана на озере Удомля. Левитан называл её своей самой заветной работой — в ней он выразил размышления о вечности, смерти и месте человека в мироздании.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Levitan_above_eternal_peace.jpg"
+    imageUrl: wm("Levitan above eternal peace.jpg")
   },
   {
     id: 7,
@@ -67,7 +70,7 @@ const paintings = [
     topic: "Исторический жанр",
     description: "Монументальное полотно с тремя главными богатырями русского эпоса — Добрыней Никитичем, Ильёй Муромцем и Алёшей Поповичем.",
     story: "Васнецов работал над картиной почти тридцать лет. Первый эскиз был сделан в 1871 году, а законченное полотно передано в Третьяковскую галерею в 1898-м.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Viktor_Vasnetsov_-_Bogatyrs_-_Google_Art_Project.jpg"
+    imageUrl: wm("Viktor Vasnetsov - Bogatyrs - Google Art Project.jpg")
   },
   {
     id: 8,
@@ -77,7 +80,7 @@ const paintings = [
     topic: "Быт и природа",
     description: "Картина изображает группу бурлаков, тянущих баржу вдоль берега Волги под летним солнцем.",
     story: "Репин работал над полотном три года. Художник лично путешествовал по Волге, делая зарисовки реальных бурлаков и изучая их тяжёлый труд.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Ilya_Repin_-_Barge_Haulers_on_the_Volga_-_Google_Art_Project.jpg"
+    imageUrl: wm("Ilya Repin - Barge Haulers on the Volga - Google Art Project.jpg")
   },
   {
     id: 9,
@@ -87,7 +90,7 @@ const paintings = [
     topic: "Исторический жанр",
     description: "Картина изображает драматическую сцену: царь Иван IV держит на руках смертельно раненого им сына.",
     story: "Картина произвела такое потрясающее впечатление на современников, что один из посетителей галереи порезал её ножом. Репину потребовалось несколько недель для реставрации.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Repin_Ivan_Terrible.jpg"
+    imageUrl: wm("Repin Ivan Terrible.jpg")
   },
   {
     id: 10,
@@ -97,7 +100,7 @@ const paintings = [
     topic: "Портрет",
     description: "Портрет двенадцатилетней Веры Мамонтовой, написанный в солнечной комнате усадьбы Абрамцево.",
     story: "Серов работал над картиной почти три месяца, добиваясь ощущения мимолётного летнего момента. Сам художник говорил, что хотел написать «свежесть».",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Valentin_Serov_-_Girl_with_Peaches_-_1887.jpg"
+    imageUrl: wm("Valentin Serov - Girl with Peaches - 1887.jpg")
   },
   {
     id: 11,
@@ -107,7 +110,7 @@ const paintings = [
     topic: "Пейзаж",
     description: "Яркий, радостный пейзаж, изображающий первые признаки весны: осевший снег, синее небо и лошадь у крыльца.",
     story: "Картина написана в усадьбе Горка Тверской губернии. Левитан завершил её в несколько дней, работая прямо на открытом воздухе.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Levitan_march.jpg"
+    imageUrl: wm("Levitan march.jpg")
   },
   {
     id: 12,
@@ -117,7 +120,7 @@ const paintings = [
     topic: "Портрет",
     description: "Торжественный парадный портрет двух воспитанниц графини Самойловой: Джованнины и Амалиции Пачини.",
     story: "Картина стала сенсацией на выставке в Милане в 1832 году. Критики назвали её «большой картиной» — высшей похвалой того времени.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Karl_Briullov_-_The_Horsewoman_-_Google_Art_Project.jpg"
+    imageUrl: wm("Karl Briullov - The Horsewoman - Google Art Project.jpg")
   },
   {
     id: 13,
@@ -127,7 +130,7 @@ const paintings = [
     topic: "Исторический жанр",
     description: "Грандиозное полотно, изображающее гибель Помпеи при извержении Везувия в 79 году н.э.",
     story: "Брюллов посетил раскопки Помпеи в 1828 году и был потрясён увиденным. Работа над картиной заняла шесть лет. При показе в Петербурге публика была в восторге.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Karl_Briullov_-_The_Last_Day_of_Pompeii_-_Google_Art_Project.jpg"
+    imageUrl: wm("Karl Briullov - The Last Day of Pompeii - Google Art Project.jpg")
   },
   {
     id: 14,
@@ -137,7 +140,7 @@ const paintings = [
     topic: "Пейзаж",
     description: "Широкое ржаное поле под голубым небом с одинокими соснами на горизонте — один из символов русского лета.",
     story: "Картина написана по этюдам, сделанным в Елабуге. На подрамнике Шишкин оставил надпись: «Раздолье, простор, угодье. Рожь».",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Shishkin_rye.jpg"
+    imageUrl: wm("Shishkin rye.jpg")
   },
   {
     id: 15,
@@ -147,7 +150,7 @@ const paintings = [
     topic: "Быт и природа",
     description: "Трое измождённых детей тянут по снегу тяжёлую бочку с водой. Картина стала символом тяжёлой доли крестьянских детей.",
     story: "Перов долго не мог найти подходящего мальчика для центральной фигуры. Наконец он встретил крестьянку с сыном Васей. Позднее мать разыскала художника: мальчик умер, и она просила продать ей портрет.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Perov_-_Troika.jpg"
+    imageUrl: wm("Perov - Troika.jpg")
   },
   {
     id: 16,
@@ -157,7 +160,7 @@ const paintings = [
     topic: "Пейзаж",
     description: "Солнечный осенний пейзаж с берёзовой рощей и голубой рекой, один из самых светлых и радостных пейзажей Левитана.",
     story: "Картина написана в окрестностях Владимира. В «Золотой осени» Левитан запечатлел торжество и великолепие природы.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Levitan_Zolotaya_Osen.jpg"
+    imageUrl: wm("Levitan Zolotaya Osen.jpg")
   },
   {
     id: 17,
@@ -167,7 +170,7 @@ const paintings = [
     topic: "Портрет",
     description: "Молодая женщина в открытом экипаже на фоне зимнего Петербурга. Её личность до сих пор остаётся загадкой.",
     story: "Крамской так и не раскрыл, кто изображён на картине. Картина стала воплощением таинственной красоты.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Ivan_Kramskoy_-_Unknown_Woman_-_Google_Art_Project.jpg"
+    imageUrl: wm("Ivan Kramskoy - Unknown Woman - Google Art Project.jpg")
   },
   {
     id: 18,
@@ -177,7 +180,7 @@ const paintings = [
     topic: "Сказочный жанр",
     description: "Девочка-сирота, сидящая у лесного пруда в окружении тёмного леса. Картина навеяна русской народной сказкой.",
     story: "Васнецов написал картину под впечатлением от встречи с деревенской девочкой, в глазах которой художник увидел «глубокую тоску одиночества и сугубо русскую печаль».",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Vasnetsov_Alenushka.jpg"
+    imageUrl: wm("Vasnetsov Alenushka.jpg")
   },
   {
     id: 19,
@@ -187,7 +190,7 @@ const paintings = [
     topic: "Быт и природа",
     description: "Трое охотников на привале: один увлечённо рассказывает небылицы, второй скептически усмехается, третий простодушно верит.",
     story: "Картина была воспринята как жанровая сцена с юмором. Писатель Достоевский называл её одним из лучших произведений Перова.",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Hunters_at_Rest_by_Perov.jpg"
+    imageUrl: wm("Hunters at Rest by Perov.jpg")
   },
   {
     id: 20,
@@ -197,6 +200,6 @@ const paintings = [
     topic: "Пейзаж",
     description: "Величественный сосновый лес с просматривающимся ручьём. Одна из последних и самых зрелых работ художника.",
     story: "Картина написана по этюдам с натуры близ Елабуги. Шишкин сделал надпись на холсте: «Афанасовская корабельная роща близ Елабуги».",
-    imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Shishkin_ship_grove.jpg"
+    imageUrl: wm("Shishkin ship grove.jpg")
   }
 ];
