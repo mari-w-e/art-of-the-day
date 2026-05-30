@@ -36,7 +36,6 @@ const Auth = {
   }
 };
 
-// Глобальный алиас для onclick-атрибутов в HTML
-function logout() {
-  Auth.logout();
-}
+function logout() { Auth.logout(); }
+function login(email, password) { return Auth.login(email, password); }
+function register(username, email, password) { return Auth.register(username, email, password); }
