@@ -25,27 +25,19 @@
   </div>
 
   <script src="js/paintings.js"></script>
+  <script src="js/storage.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
   <script>
-    updateNav();
-    const painting = getTodayPainting();
-    const user = getCurrentUser();
+    App.updateNav();
+    const painting = App.getTodayPainting();
+    const user = Auth.getCurrentUser();
 
     if (user) {
-      saveToHistory(user.id, painting.id);
+      App.recordView(user.id, painting.id);
     }
 
-    document.getElementById('painting-card').innerHTML = `
-      <img src="${painting.imageUrl}" alt="${painting.title}">
-      <div class="painting-info">
-        <div class="painting-title">${painting.title}</div>
-        <div class="painting-artist">${painting.artist}, ${painting.year}</div>
-        <div class="painting-description">${painting.description}</div>
-        <div class="painting-story">${painting.story}</div>
-        ${!user ? '<div class="guest-notice">Войдите в аккаунт, чтобы сохранять историю просмотров</div>' : ''}
-      </div>
-    `;
+    App.renderPaintingCard(painting, 'painting-card', { guestNotice: true });
   </script>
 </body>
 </html>
