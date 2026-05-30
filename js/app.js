@@ -1,7 +1,44 @@
 const App = {
+  _imageCache: {}, 
+
+    async loadImage(imgEl, filename) {
+    if (!filename || !imgEl) return;
+
+
+    if (this._imageCache[filename]) {
+      imgEl.src = this._imageCache[filename];
+      return;
+    }
+
+    try {
+      const apiUrl = 'https://commons.wikimedia.org/w/api.php?' + new URLSearchParams({
+        action: 'query',
+        titles: `File:${filename}`,
+        prop: 'imageinfo',
+        iiprop: 'url',
+        iiurlwidth: '900',
+        format: 'json',
+        origin: '*'
+      });
+
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      const pages = data?.query?.pages || {};
+      const page = Object.values(pages)[0];
+      const thumbUrl = page?.imageinfo?.[0]?.thumburl;
+
+      if (thumbUrl) {
+        this._imageCache[filename] = thumbUrl;
+        imgEl.src = thumbUrl;
+      }
+    } catch (e) {
+      console.warn('Не удалось загрузить изображение:', filename, e);
+    }
+  },
+
 
   getTodayPainting() {
-    const today = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const today = new Date().toISOString().split('T')[0];
     const seed = today.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
     return paintings[seed % paintings.length];
   },
@@ -10,7 +47,6 @@ const App = {
     return paintings.find(p => p.id === id) || null;
   },
 
-  // История просмотров
 
   recordView(userId, paintingId) {
     Storage.addToHistory(userId, paintingId);
@@ -22,7 +58,6 @@ const App = {
       .filter(p => p.id !== undefined);
   },
 
-  // Избранное
 
   toggleFavorite(userId, paintingId) {
     return Storage.toggleFavorite(userId, paintingId);
@@ -38,7 +73,6 @@ const App = {
       .filter(Boolean);
   },
 
-  // Навигация
 
   updateNav() {
     const user = Auth.getCurrentUser();
@@ -57,7 +91,6 @@ const App = {
     }
   },
 
-  // рендер карточки картины
 
   renderPaintingCard(painting, containerId, options = {}) {
     const container = document.getElementById(containerId);
@@ -71,8 +104,10 @@ const App = {
          </button>`
       : '';
 
+    const imgId = `painting-img-${painting.id}`;
+
     container.innerHTML = `
-      <img src="${painting.imageUrl}" alt="${painting.title}">
+      <img id="${imgId}" src="" alt="${painting.title}" style="background:#f0ede8; min-height:300px">
       <div class="painting-info">
         <div class="painting-title">${painting.title}</div>
         <div class="painting-artist">${painting.artist}, ${painting.year}</div>
@@ -85,6 +120,9 @@ const App = {
           : ''}
       </div>
     `;
+
+    const imgEl = document.getElementById(imgId);
+    this.loadImage(imgEl, painting.filename);
   },
 
   handleFavToggle(paintingId, btn) {
@@ -93,8 +131,36 @@ const App = {
     const added = App.toggleFavorite(user.id, paintingId);
     btn.textContent = added ? '★ В избранном' : '☆ В избранное';
     btn.classList.toggle('active', added);
+  },
+
+
+  renderGallery(containerId, items, emptyText) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+
+    if (items.length === 0) {
+      el.innerHTML = `<div class="empty-state">${emptyText}</div>`;
+      return;
+    }
+
+    const cards = items.map(p => `
+      <a href="painting.html?id=${p.id}" class="gallery-item">
+        <img id="gallery-img-${p.id}" src="" alt="${p.title}" style="background:#f0ede8">
+        <div class="gallery-item-info">
+          <div class="gallery-item-title">${p.title}</div>
+          <div class="gallery-item-artist">${p.artist}, ${p.year}</div>
+        </div>
+      </a>
+    `).join('');
+
+    el.innerHTML = `<div class="gallery">${cards}</div>`;
+
+    items.forEach(p => {
+      const imgEl = document.getElementById(`gallery-img-${p.id}`);
+      this.loadImage(imgEl, p.filename);
+    });
   }
 };
 
-// Глобальный алиас для совместимости
 function updateNav() { App.updateNav(); }
+function logout() { Auth.logout(); }
